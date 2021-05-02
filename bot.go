@@ -95,13 +95,26 @@ func (b Bot) Start() {
 }
 
 // Call the handler corresponding to a pair (event, filter) id it exists.
-func (b Bot) dispatchEvent(event string, filter string, u *Update) {
-	handler, exists := b.handlerMap[event][filter]
+func (b Bot) dispatchEvent(event string, filter string, checker func(toCheck string, filter string) bool, u *Update) {
 
-	// If a corresponding event exists, call the handler.
-	if exists {
-		handler(*u)
+	eventMap := b.handlerMap[event]
+
+	// Get all keys of the eventMap
+	keys := make([]string, len(eventMap))
+
+	i := 0
+	for k := range eventMap {
+		keys[i] = k
+		i += 1
 	}
+
+	// Dispatch handler if checker is true for each key
+	for _, k := range keys {
+		if checker(k, filter) {
+			eventMap[k](*u)
+		}
+	}
+
 }
 
 // Dispatch an update to the corresponding handler based on the detected event.
@@ -111,7 +124,7 @@ func (b Bot) dispatchUpdate(u *Update) {
 	switch {
 	// Dispatch ONTEXT events.
 	case u.Message.Text != "":
-		b.dispatchEvent(ONTEXT, u.Message.Text, u)
+		b.dispatchEvent(ONTEXT, u.Message.Text, func(toCheck string, filter string) bool { return toCheck == filter }, u)
 	}
 }
 
