@@ -28,7 +28,7 @@ In order to build a bot, follow the steps :
 ```Go
     bot.OnText("/test", func(u telebot.Update) {
     const text = "I hear you loud and clear !"
-    const chatId = u.Message.From
+    const chatId = u.Message.Chat.Id
     _, err := telebot.SendTextToTelegramChat(chatId, text)
 
     if err != nil {
@@ -79,7 +79,7 @@ func main() {
     // Bind a handler to the message /text.
     bot.OnText("/test", func(u telebot.Update) {
         text := "I hear you loud and clear !"
-        chatId := u.Message.From
+        chatId := u.Message.Chat.Id
 
         _, err := bot.SendTextToTelegramChat(chatId, text)
 

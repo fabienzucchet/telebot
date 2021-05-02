@@ -21,7 +21,7 @@
 //
 //		bot.OnText("/test", func(u telebot.Update) {
 //		const text = "I hear you loud and clear !"
-//		const chatId = u.Message.From
+//		const chatId = u.Message.Chat.Id
 //		_, err := telebot.SendTextToTelegramChat(chatId, text)
 //
 //		if err != nil {
