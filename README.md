@@ -55,41 +55,41 @@ Below is an example of a simple bot that you can use to experiment with telebot.
 package main
 
 import (
-	"log"
+    "log"
 
-	"github.com/fabienzucchet/telebot"
+    "github.com/fabienzucchet/telebot"
 )
 
 func main() {
 
     // Define Telegram API token.
-	const apiToken = "changeme"
+    const apiToken = "changeme"
 
     // If you want to use webhook, define config.
-	config := make(map[string]string)
+    config := make(map[string]string)
 
-	config["WebhookUrl"] = "changeme"
-	config["IpAddr"] = "changeme"
-	config["SslCertificate"] = "changeme"
-	config["SslPrivkey"] = "changeme"
+    config["WebhookUrl"] = "changeme"
+    config["IpAddr"] = "changeme"
+    config["SslCertificate"] = "changeme"
+    config["SslPrivkey"] = "changeme"
 
     // Replace config with nil below to use an update loop instead of a webhook.
-	bot := telebot.CreateBot(apiToken, config)
+    bot := telebot.CreateBot(apiToken, config)
 
     // Bind a handler to the message /text.
-	bot.OnText("/test", func(u telebot.Update) {
-		text := "I hear you loud and clear !"
-		chatId := u.Message.From
+    bot.OnText("/test", func(u telebot.Update) {
+        text := "I hear you loud and clear !"
+        chatId := u.Message.From
 
-		_, err := bot.SendTextToTelegramChat(chatId, text)
+        _, err := bot.SendTextToTelegramChat(chatId, text)
 
-		if err != nil {
-			log.Printf("Error sending message: %s", err.Error())
-		}
-	})
+        if err != nil {
+            log.Printf("Error sending message: %s", err.Error())
+        }
+    })
 
     // Start the bot.
-	bot.Start()
+    bot.Start()
 
 }
 ```
