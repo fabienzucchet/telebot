@@ -95,9 +95,9 @@ func (b Bot) Start() {
 }
 
 // Call the handler corresponding to a pair (event, filter) id it exists.
-func (b Bot) dispatchEvent(event string, filter string, checker func(toCheck string, filter string) bool, u *Update) {
+func (b Bot) dispatchEvent(event Event, filter string, u *Update) {
 
-	eventMap := b.handlerMap[event]
+	eventMap := b.handlerMap[event.Identifier]
 
 	// Get all keys of the eventMap
 	keys := make([]string, len(eventMap))
@@ -110,7 +110,9 @@ func (b Bot) dispatchEvent(event string, filter string, checker func(toCheck str
 
 	// Dispatch handler if checker is true for each key
 	for _, k := range keys {
-		if checker(k, filter) {
+
+		if event.Checker(k, filter) {
+
 			eventMap[k](*u)
 		}
 	}
@@ -122,26 +124,26 @@ func (b Bot) dispatchUpdate(u *Update) {
 
 	// Find the corresponding event and dispatch it.
 	switch {
-	// Dispatch ONTEXT events.
 	case u.Message.Text != "":
-		b.dispatchEvent(ONTEXT, u.Message.Text, func(toCheck string, filter string) bool { return toCheck == filter }, u)
+		b.dispatchEvent(ONCOMMAND, u.Message.Text, u)
+		b.dispatchEvent(ONTEXT, u.Message.Text, u)
 	}
 }
 
 // Register the handler corresponding to the pair (event, filter)
-func (b Bot) registerHandler(event string, filter string, handler func(u Update)) {
+func (b Bot) registerHandler(event Event, filter string, handler func(u Update)) {
 	// Check if event is already registered.
-	_, exists := b.handlerMap[event]
+	_, exists := b.handlerMap[event.Identifier]
 
 	// If the event doesn't exist, create a new eventMap and register the handler.
 	if !exists {
 		eventMap := make(map[string]func(u Update))
 		eventMap[filter] = handler
-		b.handlerMap[event] = eventMap
+		b.handlerMap[event.Identifier] = eventMap
 
 		// Otherwise, register the handler.
 	} else {
-		b.handlerMap[event][filter] = handler
+		b.handlerMap[event.Identifier][filter] = handler
 	}
 }
 
@@ -153,8 +155,16 @@ func (b Bot) registerHandler(event string, filter string, handler func(u Update)
 func (b Bot) OnText(text string, handler func(u Update)) {
 
 	event := ONTEXT
-	filter := text
 
 	// Register handler.
-	b.registerHandler(event, filter, handler)
+	b.registerHandler(event, text, handler)
+}
+
+// Match commands (i.e. when text starts with the filter but can contain more text)
+func (b Bot) OnCommand(text string, handler func(u Update)) {
+
+	event := ONCOMMAND
+
+	// Register handler.
+	b.registerHandler(event, text, handler)
 }

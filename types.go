@@ -13,6 +13,12 @@ type Cert struct {
 	Certificate string
 }
 
+// Event type : contains an identifier and a checker function.
+type Event struct {
+	Identifier string
+	Checker    func(toCheck string, filter string) bool
+}
+
 // Structure of the /getUpdates response body.
 type GetUpdateResponse struct {
 	Ok     bool     `json:"ok"`
