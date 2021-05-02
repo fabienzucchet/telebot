@@ -103,7 +103,6 @@ In addition to update reception, telebot has some functions designed to make you
 bot.SendTextMessage(chatId int, text string)
 ```
 
-
 ## Example bot
 
 Below is an example of a simple bot that you can use to experiment with telebot.
