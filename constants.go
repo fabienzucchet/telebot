@@ -19,7 +19,7 @@ const setWebhookEndpoint string = "/setWebhook"
 var ONCOMMAND = Event{
 	Identifier: "oncommand",
 	Checker: func(toCheck string, filter string) bool {
-		match, _ := regexp.MatchString(toCheck+" .*", filter)
+		match, _ := regexp.MatchString(toCheck+".*", filter)
 		return match
 	},
 }
