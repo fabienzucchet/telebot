@@ -9,7 +9,7 @@ import (
 )
 
 // Send the message text in the chat chatId
-func (b Bot) SendTextToTelegramChat(chatId int, text string) (string, error) {
+func (b Bot) SendTextMessage(chatId int, text string) (string, error) {
 
 	// Try to send message with telegram API /sendMessage endpoint.
 	response, err := http.PostForm(

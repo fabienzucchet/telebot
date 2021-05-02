@@ -29,10 +29,21 @@ In order to build a bot, follow the steps :
     bot.OnText("/test", func(u telebot.Update) {
     const text = "I hear you loud and clear !"
     const chatId = u.Message.Chat.Id
-    _, err := telebot.SendTextToTelegramChat(chatId, text)
+    _, err := telebot.SendTextMessage(chatId, text)
 
     if err != nil {
         log.Printf("Error sending message: %s", err.Error())
+        }
+    })
+
+    bot.OnCommand("/repeat", func(u telebot.Update) {
+        payload := u.Message.Text[len("/repeat"):]
+        chatId := u.Message.Chat.Id
+
+        _, err := bot.SendTextMessage(chatId, payload)
+
+        if err != nil {
+            log.Printf("Error sending message: %s", err.Error())
         }
     })
 ```
@@ -43,9 +54,55 @@ In order to build a bot, follow the steps :
     bot.Start()
 ```
 
+### List of events available
+
+The Events are defined in [constants.go](constants.go).
+
+* **ONCOMMAND**: Match messages starting with a command (Ex : In `/repeat Hello World !`, the command is `/repeat` and the payload is `Hello World !`)
+
+Below is an example making the bot repeat the payload:
+
+```Go
+bot.OnCommand("/repeat", func(u telebot.Update) {
+    payload := u.Message.Text[len("/repeat"):]
+    chatId := u.Message.Chat.Id
+
+    _, err := bot.SendTextMessage(chatId, payload)
+
+    if err != nil {
+        log.Printf("Error sending message: %s", err.Error())
+    }
+})
+```
+
+* **ONTEXT**: Match exactly the text of the message
+
+Below is an example matching the message `/hello` but not `/hello you`:
+
+```Go
+bot.OnText("/hello", func(u telebot.Update) {
+    text := "Hello World !"
+    chatId := u.Message.Chat.Id
+    _, err := bot.SendTextMessage(chatId, text)
+
+    if err != nil {
+        log.Printf("Error sending message: %s", err.Error())
+    }
+})
+```
+
 ## How to make the bot send content to Telegram chat with telebot ?
 
 In addition to update reception, telebot has some functions designed to make your bot send content. You can use it in your handlers. Such methods are defined in [messages.go](messages.go).
+
+### List of reply methods available
+
+* **SendTextMessage** : Sends a text message.
+
+```Go
+bot.SendTextMessage(chatId int, text string)
+```
+
 
 ## Example bot
 
@@ -81,7 +138,18 @@ func main() {
         text := "I hear you loud and clear !"
         chatId := u.Message.Chat.Id
 
-        _, err := bot.SendTextToTelegramChat(chatId, text)
+        _, err := bot.SendTextMessage(chatId, text)
+
+        if err != nil {
+            log.Printf("Error sending message: %s", err.Error())
+        }
+    })
+
+    bot.OnCommand("/repeat", func(u telebot.Update) {
+        payload := u.Message.Text[len("/repeat"):]
+        chatId := u.Message.Chat.Id
+
+        _, err := bot.SendTextMessage(chatId, payload)
 
         if err != nil {
             log.Printf("Error sending message: %s", err.Error())

@@ -22,10 +22,21 @@
 //		bot.OnText("/test", func(u telebot.Update) {
 //		const text = "I hear you loud and clear !"
 //		const chatId = u.Message.Chat.Id
-//		_, err := telebot.SendTextToTelegramChat(chatId, text)
+//		_, err := telebot.SendTextMessage(chatId, text)
 //
 //		if err != nil {
 //			log.Printf("Error sending message: %s", err.Error())
+//			}
+//		})
+//
+//		bot.OnCommand("/repeat", func(u telebot.Update) {
+//			payload := u.Message.Text[len("/repeat"):]
+//			chatId := u.Message.Chat.Id
+//
+//			_, err := bot.SendTextMessage(chatId, payload)
+//
+//			if err != nil {
+//				log.Printf("Error sending message: %s", err.Error())
 //			}
 //		})
 //
