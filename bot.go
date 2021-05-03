@@ -52,6 +52,7 @@ package telebot
 import (
 	"log"
 	"net/http"
+	"net/url"
 	"time"
 )
 
@@ -78,12 +79,18 @@ func (b Bot) Start() {
 		_, err := b.setWebhook()
 
 		if err != nil {
-			log.Printf("Error initalising the webhook: %s", err.Error())
+			panic(err)
 		}
 
 		// Start a webhook bot and handle incoming updates.
-		http.HandleFunc("/bot", func(w http.ResponseWriter, r *http.Request) {
-			handleTelegramWebHook(w, r, b)
+		u, err := url.Parse(b.config["WebhookUrl"])
+
+		if err != nil {
+			panic(err)
+		}
+
+		http.HandleFunc(u.Path+b.apiToken, func(w http.ResponseWriter, r *http.Request) {
+			b.handleTelegramWebHook(w, r)
 		})
 		http.ListenAndServeTLS(":8443", b.config["SslCertificate"], b.config["SslPrivkey"], nil)
 

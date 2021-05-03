@@ -15,7 +15,7 @@ func (b Bot) setWebhook() (string, error) {
 	res, err := http.PostForm(
 		telegramApiBaseUrl+b.apiToken+setWebhookEndpoint,
 		url.Values{
-			"url":        {b.config["WebhookUrl"]},
+			"url":        {b.config["WebhookUrl"] + b.apiToken},
 			"ip_address": {b.config["IPAddress"]},
 		})
 
@@ -78,7 +78,7 @@ func parseTelegramWebhookRequest(r *http.Request) (*Update, error) {
 }
 
 // Handle the webhook http request from Telegram.
-func handleTelegramWebHook(w http.ResponseWriter, r *http.Request, b Bot) {
+func (b Bot) handleTelegramWebHook(w http.ResponseWriter, r *http.Request) {
 
 	// parse Update object
 	update, err := parseTelegramWebhookRequest(r)
