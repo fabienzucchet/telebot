@@ -105,6 +105,12 @@ In addition to update reception, telebot has some functions designed to make you
 bot.SendTextMessage(chatId int, text string)
 ```
 
+* **SendParsedTextMessages**: Sends a messages with parsing mode. The parsing mode has to be "HTML" (ex: `Hello <strong>World</strong> !`) or "MarkdownV2" (ex: `Hello *World* !`). "Markdown" will also work but is deprecated). Remember to escape special characters in markdown parsing.
+
+```Go
+bot.SendTextMessage(chatId int, text string, parseMode string)
+```
+
 ## Example bot
 
 Below is an example of a simple bot that you can use to experiment with telebot.
