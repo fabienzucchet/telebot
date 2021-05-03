@@ -1,5 +1,7 @@
 # Telebot
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/fabienzucchet/telebot.svg)](https://pkg.go.dev/github.com/fabienzucchet/telebot)
+
 Telebot is a Go wrapper for the Telegram Bot API. It provides a convenient way to write a Telegram in Go whitout diving in Telegram API.
 Updates are receveived from Telegram either with Telegram Webhook or with calls to Telegram /getUpdates API endpoint.
 
