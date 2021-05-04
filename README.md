@@ -99,10 +99,23 @@ In addition to update reception, telebot has some functions designed to make you
 
 ### List of reply methods available
 
-* **SendTextMessage** : Sends a text message.
+* **SendTextMessage**: Sends a text message.
 
 ```Go
 bot.SendTextMessage(chatId int, text string, options telebot.SendMessageOptions)
+```
+
+```Go
+    bot.OnCommand("/repeat", func(u telebot.Update) {
+        payload := u.Message.Text[len("/repeat"):]
+        chatId := u.Message.Chat.Id
+
+        _, err := bot.SendTextMessage(chatId, payload, telebot.SendMessageOptions{ReplyToMessageId: u.Message.Id, AllowSendingWithoutReply: true, DisableWebPagePreview: true})
+
+        if err != nil {
+            log.Printf("Error sending message: %s", err.Error())
+        }
+    })
 ```
 
 Options are a struct with type and supports telegram API options described [here](https://core.telegram.org/bots/api#sendmessage) with the same name.
@@ -116,6 +129,26 @@ type SendMessageOptions struct {
     AllowSendingWithoutReply bool
 }
 ```
+
+* **SendDice**: Sends a dice.
+
+```Go
+bot.SendDice(chatId int, options telebot.SendMessageOptions)
+```
+
+```Go
+    bot.OnText("/dice", func(u telebot.Update) {
+        chatId := u.Message.Chat.Id
+
+        _, err := bot.SendDice(chatId, telebot.SendMessageOptions{ReplyToMessageId: u.Message.Id, AllowSendingWithoutReply: true})
+
+        if err != nil {
+            log.Printf("Error sending message: %s", err.Error())
+        }
+    })
+```
+
+Check the [Telegram API documentation](https://core.telegram.org/bots/api#senddice) to see the options of Telegram sendDice API function supported (defined in telebot.SendMessageOptions).
 
 ## Example bot
 

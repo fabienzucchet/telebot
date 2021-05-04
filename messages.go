@@ -8,11 +8,11 @@ import (
 	"strconv"
 )
 
-// Helper to call /sendMessage API to send a message
-func (b Bot) sendMessageAPICall(v url.Values) (string, error) {
+// Helper to call Telegram API on the endpoint passed as parameter
+func (b Bot) makeAPICall(endpoint string, v url.Values) (string, error) {
 	// Try to send message with telegram API /sendMessage endpoint.
 	response, err := http.PostForm(
-		telegramApiBaseUrl+b.apiToken+sendMessageEndpoint,
+		telegramApiBaseUrl+b.apiToken+endpoint,
 		v,
 	)
 
@@ -56,6 +56,22 @@ func (b Bot) SendTextMessage(chatId int, text string, options SendMessageOptions
 		val["reply_to_message_id"] = []string{strconv.Itoa(options.ReplyToMessageId)}
 	}
 
-	return b.sendMessageAPICall(val)
+	return b.makeAPICall(sendMessageEndpoint, val)
 
+}
+
+// Send a dice
+func (b Bot) SendDice(chatId int, options SendMessageOptions) (string, error) {
+	val := url.Values{
+		"chat_id":                     {strconv.Itoa(chatId)},
+		"disable_notification":        {strconv.FormatBool(options.DisableNotification)},
+		"allow_sending_without_reply": {strconv.FormatBool(options.AllowSendingWithoutReply)},
+	}
+
+	// Reply to message
+	if options.ReplyToMessageId != 0 {
+		val["reply_to_message_id"] = []string{strconv.Itoa(options.ReplyToMessageId)}
+	}
+
+	return b.makeAPICall(sendDiceEndpoint, val)
 }
