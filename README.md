@@ -31,7 +31,7 @@ In order to build a bot, follow the steps :
     bot.OnText("/test", func(u telebot.Update) {
     const text = "I hear you loud and clear !"
     const chatId = u.Message.Chat.Id
-    _, err := telebot.SendTextMessage(chatId, text)
+    _, err := telebot.SendTextMessage(chatId, text, telebot.SendMessageOptions{})
 
     if err != nil {
         log.Printf("Error sending message: %s", err.Error())
@@ -42,7 +42,7 @@ In order to build a bot, follow the steps :
         payload := u.Message.Text[len("/repeat"):]
         chatId := u.Message.Chat.Id
 
-        _, err := bot.SendTextMessage(chatId, payload)
+        _, err := bot.SendTextMessage(chatId, payload, telebot.SendMessageOptions{})
 
         if err != nil {
             log.Printf("Error sending message: %s", err.Error())
@@ -69,7 +69,7 @@ bot.OnCommand("/repeat", func(u telebot.Update) {
     payload := u.Message.Text[len("/repeat"):]
     chatId := u.Message.Chat.Id
 
-    _, err := bot.SendTextMessage(chatId, payload)
+    _, err := bot.SendTextMessage(chatId, payload, telebot.SendMessageOptions{})
 
     if err != nil {
         log.Printf("Error sending message: %s", err.Error())
@@ -85,7 +85,7 @@ Below is an example matching the message `/hello` but not `/hello you`:
 bot.OnText("/hello", func(u telebot.Update) {
     text := "Hello World !"
     chatId := u.Message.Chat.Id
-    _, err := bot.SendTextMessage(chatId, text)
+    _, err := bot.SendTextMessage(chatId, text, telebot.SendMessageOptions{})
 
     if err != nil {
         log.Printf("Error sending message: %s", err.Error())
@@ -102,13 +102,19 @@ In addition to update reception, telebot has some functions designed to make you
 * **SendTextMessage** : Sends a text message.
 
 ```Go
-bot.SendTextMessage(chatId int, text string)
+bot.SendTextMessage(chatId int, text string, options telebot.SendMessageOptions)
 ```
 
-* **SendParsedTextMessages**: Sends a messages with parsing mode. The parsing mode has to be "HTML" (ex: `Hello <strong>World</strong> !`) or "MarkdownV2" (ex: `Hello *World* !`). "Markdown" will also work but is deprecated). Remember to escape special characters in markdown parsing.
+Options are a struct with type and supports telegram API options described [here](https://core.telegram.org/bots/api#sendmessage) with the same name.
 
 ```Go
-bot.SendTextMessage(chatId int, text string, parseMode string)
+type SendMessageOptions struct {
+    ParseMode                string
+    DisableWebPagePreview    bool
+    DisableNotification      bool
+    ReplyToMessageId         int
+    AllowSendingWithoutReply bool
+}
 ```
 
 ## Example bot
@@ -142,21 +148,23 @@ func main() {
 
     // Bind a handler to the message /text.
     bot.OnText("/test", func(u telebot.Update) {
-        text := "I hear you loud and clear !"
+        text := "I hear you <strong>loud and clear </strong> !"
         chatId := u.Message.Chat.Id
+        parseMode := "HTML"
 
-        _, err := bot.SendTextMessage(chatId, text)
+        _, err := bot.SendTextMessage(chatId, text, telebot.SendMessageOptions{ParseMode: parseMode})
 
         if err != nil {
             log.Printf("Error sending message: %s", err.Error())
         }
     })
 
+    // Bin a handler to the command /repeat
     bot.OnCommand("/repeat", func(u telebot.Update) {
         payload := u.Message.Text[len("/repeat"):]
         chatId := u.Message.Chat.Id
 
-        _, err := bot.SendTextMessage(chatId, payload)
+        _, err := bot.SendTextMessage(chatId, payload, telebot.SendMessageOptions{ReplyToMessageId: u.Message.Id, AllowSendingWithoutReply: true, DisableWebPagePreview: true})
 
         if err != nil {
             log.Printf("Error sending message: %s", err.Error())

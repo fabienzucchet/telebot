@@ -36,9 +36,19 @@ type Chat struct {
 
 // Message type corresponding to the interesting part of the Message Object in the Telegram API.
 type Message struct {
+	Id   int    `json:"message_id"`
 	Text string `json:"text"`
 	From User   `json:"from"`
 	Chat Chat   `json:"chat"`
+}
+
+// Option type for the sendMessage API
+type SendMessageOptions struct {
+	ParseMode                string
+	DisableWebPagePreview    bool
+	DisableNotification      bool
+	ReplyToMessageId         int
+	AllowSendingWithoutReply bool
 }
 
 // Update type corresponding to the interesting part of the Update Object in the Telegram API.
