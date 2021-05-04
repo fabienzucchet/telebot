@@ -150,6 +150,18 @@ bot.SendDice(chatId int, options telebot.SendMessageOptions)
 
 Check the [Telegram API documentation](https://core.telegram.org/bots/api#senddice) to see the options of Telegram sendDice API function supported (defined in telebot.SendMessageOptions).
 
+* **KickChatMember**: Kick a chat member.
+
+```Go
+bot.KickChatMember(chatId int, userId int)
+```
+
+* **UnbanChatMember**: Unban a chat member.
+
+```Go
+bot.UnbanChatMember(chatId int, userId int)
+```
+
 ## Example bot
 
 Below is an example of a simple bot that you can use to experiment with telebot.
