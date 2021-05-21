@@ -28,7 +28,7 @@ In order to build a bot, follow the steps :
 * Write handlers and link it to your bot with the OnText function
 
 ```Go
-    bot.OnText("/test", func(u telebot.Update) {
+    bot.OnText("/test", func(u *telebot.Update) {
     const text = "I hear you loud and clear !"
     const chatId = u.Message.Chat.Id
     _, err := telebot.SendTextMessage(chatId, text, telebot.SendMessageOptions{})
@@ -38,7 +38,7 @@ In order to build a bot, follow the steps :
         }
     })
 
-    bot.OnCommand("/repeat", func(u telebot.Update) {
+    bot.OnCommand("/repeat", func(u *telebot.Update) {
         payload := u.Message.Text[len("/repeat"):]
         chatId := u.Message.Chat.Id
 
@@ -65,7 +65,7 @@ The Events are defined in [constants.go](constants.go).
 Below is an example making the bot repeat the payload:
 
 ```Go
-bot.OnCommand("/repeat", func(u telebot.Update) {
+bot.OnCommand("/repeat", func(u *telebot.Update) {
     payload := u.Message.Text[len("/repeat"):]
     chatId := u.Message.Chat.Id
 
@@ -82,7 +82,7 @@ bot.OnCommand("/repeat", func(u telebot.Update) {
 Below is an example matching the message `/hello` but not `/hello you`:
 
 ```Go
-bot.OnText("/hello", func(u telebot.Update) {
+bot.OnText("/hello", func(u *telebot.Update) {
     text := "Hello World !"
     chatId := u.Message.Chat.Id
     _, err := bot.SendTextMessage(chatId, text, telebot.SendMessageOptions{})
@@ -106,7 +106,7 @@ bot.SendTextMessage(chatId int, text string, options telebot.SendMessageOptions)
 ```
 
 ```Go
-    bot.OnCommand("/repeat", func(u telebot.Update) {
+    bot.OnCommand("/repeat", func(u *telebot.Update) {
         payload := u.Message.Text[len("/repeat"):]
         chatId := u.Message.Chat.Id
 
@@ -137,7 +137,7 @@ bot.SendDice(chatId int, options telebot.SendMessageOptions)
 ```
 
 ```Go
-    bot.OnText("/dice", func(u telebot.Update) {
+    bot.OnText("/dice", func(u *telebot.Update) {
         chatId := u.Message.Chat.Id
 
         _, err := bot.SendDice(chatId, telebot.SendMessageOptions{ReplyToMessageId: u.Message.Id, AllowSendingWithoutReply: true})
@@ -192,7 +192,7 @@ func main() {
     bot := telebot.CreateBot(apiToken, config)
 
     // Bind a handler to the message /text.
-    bot.OnText("/test", func(u telebot.Update) {
+    bot.OnText("/test", func(u *telebot.Update) {
         text := "I hear you <strong>loud and clear </strong> !"
         chatId := u.Message.Chat.Id
         parseMode := "HTML"
@@ -205,7 +205,7 @@ func main() {
     })
 
     // Bin a handler to the command /repeat
-    bot.OnCommand("/repeat", func(u telebot.Update) {
+    bot.OnCommand("/repeat", func(u *telebot.Update) {
         payload := u.Message.Text[len("/repeat"):]
         chatId := u.Message.Chat.Id
 
