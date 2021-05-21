@@ -29,7 +29,7 @@ func parseTelegramGetUpdateResponse(r *http.Response) ([]Update, error) {
 }
 
 //Fetch and dispatch last updates for a Bot with Telegram /getUpdates API endpoint.
-func (b Bot) getUpdates(offset int) int {
+func (b *Bot) getUpdates(offset int) int {
 
 	// Get Updates with Telegram /getUpdates API.
 	res, err := http.PostForm(

@@ -8,7 +8,7 @@ import (
 )
 
 // Helper to call Telegram API on the endpoint passed as parameter
-func (b Bot) makeAPICall(endpoint string, v url.Values) (string, error) {
+func (b *Bot) makeAPICall(endpoint string, v url.Values) (string, error) {
 	// Try to send message with telegram API /sendMessage endpoint.
 	response, err := http.PostForm(
 		telegramApiBaseUrl+b.apiToken+endpoint,

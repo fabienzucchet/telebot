@@ -6,7 +6,7 @@ import (
 )
 
 // Answer a callback query without notification
-func (b Bot) AnswerCallbackQuery(callbackQueryId string) (string, error) {
+func (b *Bot) AnswerCallbackQuery(callbackQueryId string) (string, error) {
 
 	val := url.Values{
 		"callback_query_id": {callbackQueryId},
@@ -17,7 +17,7 @@ func (b Bot) AnswerCallbackQuery(callbackQueryId string) (string, error) {
 }
 
 // Answer a callback query with notification
-func (b Bot) AnswerCallbackQueryNotification(callbackQueryId string, text string, showAlert bool) (string, error) {
+func (b *Bot) AnswerCallbackQueryNotification(callbackQueryId string, text string, showAlert bool) (string, error) {
 
 	val := url.Values{
 		"callback_query_id": {callbackQueryId},

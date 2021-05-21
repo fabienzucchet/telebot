@@ -27,7 +27,7 @@ func CreateBot(apiToken string, config map[string]string) Bot {
 }
 
 // Start the bot.
-func (b Bot) Start() {
+func (b *Bot) Start() {
 
 	// Determine the type of the bot.
 	isWebook := b.config != nil
@@ -73,7 +73,7 @@ func (b Bot) Start() {
 }
 
 // Call the handler corresponding to a pair (event, filter) id it exists.
-func (b Bot) dispatchEvent(event Event, filter string, u *Update) {
+func (b *Bot) dispatchEvent(event Event, filter string, u *Update) {
 
 	eventMap := b.handlerMap[event.Identifier]
 
@@ -98,7 +98,7 @@ func (b Bot) dispatchEvent(event Event, filter string, u *Update) {
 }
 
 // Dispatch an update to the corresponding handler based on the detected event.
-func (b Bot) dispatchUpdate(u *Update) {
+func (b *Bot) dispatchUpdate(u *Update) {
 
 	// Find the corresponding event and dispatch it.
 	switch {
@@ -112,7 +112,7 @@ func (b Bot) dispatchUpdate(u *Update) {
 }
 
 // Register the handler corresponding to the pair (event, filter)
-func (b Bot) registerHandler(event Event, filter string, handler func(u *Update)) {
+func (b *Bot) registerHandler(event Event, filter string, handler func(u *Update)) {
 	// Check if event is already registered.
 	_, exists := b.handlerMap[event.Identifier]
 
@@ -133,7 +133,7 @@ func (b Bot) registerHandler(event Event, filter string, handler func(u *Update)
 //
 
 // Trigger handler if the text of the update matches the variable text.
-func (b Bot) OnText(text string, handler func(u *Update)) {
+func (b *Bot) OnText(text string, handler func(u *Update)) {
 
 	event := ONTEXT
 
@@ -142,7 +142,7 @@ func (b Bot) OnText(text string, handler func(u *Update)) {
 }
 
 // Match commands (i.e. when text starts with the filter but can contain more text)
-func (b Bot) OnCommand(text string, handler func(u *Update)) {
+func (b *Bot) OnCommand(text string, handler func(u *Update)) {
 
 	event := ONCOMMAND
 
@@ -151,7 +151,7 @@ func (b Bot) OnCommand(text string, handler func(u *Update)) {
 }
 
 // Match CallbackQuery
-func (b Bot) OnCallback(data string, handler func(u *Update)) {
+func (b *Bot) OnCallback(data string, handler func(u *Update)) {
 
 	event := ONCALLBACK
 
@@ -160,7 +160,7 @@ func (b Bot) OnCallback(data string, handler func(u *Update)) {
 }
 
 // Match CallbackQuery with payload
-func (b Bot) OnPayload(data string, handler func(u *Update)) {
+func (b *Bot) OnPayload(data string, handler func(u *Update)) {
 
 	event := ONPAYLOAD
 

@@ -8,7 +8,7 @@ import (
 )
 
 // Send the message text in the chat chatId.
-func (b Bot) SendTextMessage(chatId int, text string, options SendMessageOptions) (string, error) {
+func (b *Bot) SendTextMessage(chatId int, text string, options SendMessageOptions) (string, error) {
 
 	// Mandatory arguments.
 	val := url.Values{
@@ -34,7 +34,7 @@ func (b Bot) SendTextMessage(chatId int, text string, options SendMessageOptions
 }
 
 // Send a text message with a ReplyKeyboardMarkup keyboard
-func (b Bot) SendReplyKeyboardMarkupTextMessage(chatId int, text string, keyboard ReplyKeyboardMarkup, options SendMessageOptions) (string, error) {
+func (b *Bot) SendReplyKeyboardMarkupTextMessage(chatId int, text string, keyboard ReplyKeyboardMarkup, options SendMessageOptions) (string, error) {
 
 	jsonStr, err := json.Marshal(keyboard)
 
@@ -69,7 +69,7 @@ func (b Bot) SendReplyKeyboardMarkupTextMessage(chatId int, text string, keyboar
 }
 
 // Send a text message with a ReplyKeyboardRemove keyboard
-func (b Bot) SendReplyKeyboardRemoveTextMessage(chatId int, text string, selective bool, options SendMessageOptions) (string, error) {
+func (b *Bot) SendReplyKeyboardRemoveTextMessage(chatId int, text string, selective bool, options SendMessageOptions) (string, error) {
 
 	keyboard := ReplyKeyboardRemove{RemoveKeyboard: true, Selective: selective}
 
@@ -106,7 +106,7 @@ func (b Bot) SendReplyKeyboardRemoveTextMessage(chatId int, text string, selecti
 }
 
 // Send a text message with an inline keyboard
-func (b Bot) SendInlineKeyboardMarkupTextMessage(chatId int, text string, keyboard InlineKeyboardMarkup, options SendMessageOptions) (string, error) {
+func (b *Bot) SendInlineKeyboardMarkupTextMessage(chatId int, text string, keyboard InlineKeyboardMarkup, options SendMessageOptions) (string, error) {
 
 	jsonStr, err := json.Marshal(keyboard)
 
@@ -141,7 +141,7 @@ func (b Bot) SendInlineKeyboardMarkupTextMessage(chatId int, text string, keyboa
 }
 
 // Send a dice
-func (b Bot) SendDice(chatId int, options SendMessageOptions) (string, error) {
+func (b *Bot) SendDice(chatId int, options SendMessageOptions) (string, error) {
 	val := url.Values{
 		"chat_id":                     {strconv.Itoa(chatId)},
 		"disable_notification":        {strconv.FormatBool(options.DisableNotification)},

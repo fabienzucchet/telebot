@@ -6,7 +6,7 @@ import (
 )
 
 // Kick an user from a group.
-func (b Bot) KickChatMember(chatId int, userId int) (string, error) {
+func (b *Bot) KickChatMember(chatId int, userId int) (string, error) {
 
 	val := url.Values{
 		"chat_id": {strconv.Itoa(chatId)},
@@ -17,7 +17,7 @@ func (b Bot) KickChatMember(chatId int, userId int) (string, error) {
 }
 
 // Unban a member from a group.
-func (b Bot) UnbanChatMember(chatId int, userId int) (string, error) {
+func (b *Bot) UnbanChatMember(chatId int, userId int) (string, error) {
 
 	val := url.Values{
 		"chat_id": {strconv.Itoa(chatId)},

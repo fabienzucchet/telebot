@@ -9,7 +9,7 @@ import (
 )
 
 // Set the webhook according to the bot config.
-func (b Bot) setWebhook() (string, error) {
+func (b *Bot) setWebhook() (string, error) {
 
 	// Set the webhook with Telegram /setWebhook API endpoint.
 	res, err := http.PostForm(
@@ -38,7 +38,7 @@ func (b Bot) setWebhook() (string, error) {
 }
 
 // Delete Bot webhook with the Telegram /deleteWebhook API endpoint.
-func (b Bot) deleteWebhook() (string, error) {
+func (b *Bot) deleteWebhook() (string, error) {
 
 	res, err := http.PostForm(
 		telegramApiBaseUrl+b.apiToken+deleteWebhookEndpoint,
@@ -78,7 +78,7 @@ func parseTelegramWebhookRequest(r *http.Request) (*Update, error) {
 }
 
 // Handle the webhook http request from Telegram.
-func (b Bot) handleTelegramWebHook(w http.ResponseWriter, r *http.Request) {
+func (b *Bot) handleTelegramWebHook(w http.ResponseWriter, r *http.Request) {
 
 	// parse Update object
 	update, err := parseTelegramWebhookRequest(r)
