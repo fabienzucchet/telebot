@@ -20,7 +20,7 @@ import (
 func CreateBot(apiToken string, config map[string]string) Bot {
 
 	// handerMap is a map to make the correspondance between events and handlers.
-	handlerMap := make(map[string]map[string]func(u Update))
+	handlerMap := make(map[string]map[string]func(u *Update))
 
 	// Create the bot.
 	return Bot{apiToken: apiToken, config: config, handlerMap: handlerMap}
@@ -91,7 +91,7 @@ func (b Bot) dispatchEvent(event Event, filter string, u *Update) {
 
 		if event.Checker(k, filter) {
 
-			eventMap[k](*u)
+			eventMap[k](u)
 		}
 	}
 
@@ -109,13 +109,13 @@ func (b Bot) dispatchUpdate(u *Update) {
 }
 
 // Register the handler corresponding to the pair (event, filter)
-func (b Bot) registerHandler(event Event, filter string, handler func(u Update)) {
+func (b Bot) registerHandler(event Event, filter string, handler func(u *Update)) {
 	// Check if event is already registered.
 	_, exists := b.handlerMap[event.Identifier]
 
 	// If the event doesn't exist, create a new eventMap and register the handler.
 	if !exists {
-		eventMap := make(map[string]func(u Update))
+		eventMap := make(map[string]func(u *Update))
 		eventMap[filter] = handler
 		b.handlerMap[event.Identifier] = eventMap
 
@@ -130,7 +130,7 @@ func (b Bot) registerHandler(event Event, filter string, handler func(u Update))
 //
 
 // Trigger handler if the text of the update matches the variable text.
-func (b Bot) OnText(text string, handler func(u Update)) {
+func (b Bot) OnText(text string, handler func(u *Update)) {
 
 	event := ONTEXT
 
@@ -139,7 +139,7 @@ func (b Bot) OnText(text string, handler func(u Update)) {
 }
 
 // Match commands (i.e. when text starts with the filter but can contain more text)
-func (b Bot) OnCommand(text string, handler func(u Update)) {
+func (b Bot) OnCommand(text string, handler func(u *Update)) {
 
 	event := ONCOMMAND
 
