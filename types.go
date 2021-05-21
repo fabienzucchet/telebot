@@ -4,7 +4,7 @@ package telebot
 type Bot struct {
 	apiToken   string
 	config     map[string]string
-	handlerMap map[string]map[string]func(u Update)
+	handlerMap map[string]map[string]func(u *Update)
 }
 
 // Paths to SSL certificate .key and .crt file
