@@ -53,8 +53,9 @@ type SendMessageOptions struct {
 
 // Update type corresponding to the interesting part of the Update Object in the Telegram API.
 type Update struct {
-	UpdateId int     `json:"update_id"`
-	Message  Message `json:"message"`
+	UpdateId      int           `json:"update_id"`
+	Message       Message       `json:"message"`
+	CallbackQuery CallbackQuery `json:"callback_query"`
 }
 
 // User type corresponding to the interesting part of the User Object in the Telegram API.
@@ -77,4 +78,20 @@ type KeyboardButton struct {
 type ReplyKeyboardRemove struct {
 	RemoveKeyboard bool `json:"remove_keyboard"`
 	Selective      bool `json:"selective"`
+}
+
+type InlineKeyboardMarkup struct {
+	InlineKeyboard [][]InlineKeyboardButton `json:"inline_keyboard"`
+}
+
+type InlineKeyboardButton struct {
+	Text         string `json:"text"`
+	CallbackData string `json:"callback_data"`
+}
+
+type CallbackQuery struct {
+	Id      string  `json:"id"`
+	From    User    `json:"from"`
+	Message Message `json:"message"`
+	Data    string  `json:"data"`
 }

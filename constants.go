@@ -6,6 +6,7 @@ import "regexp"
 const telegramApiBaseUrl string = "https://api.telegram.org/bot"
 
 // API endpoints
+const answerCallbackQueryEndpoint string = "/answerCallbackQuery"
 const deleteWebhookEndpoint string = "/deleteWebhook"
 const getUpdatesEndpoint string = "/getUpdates"
 const kickChatMemberEndpoint string = "/kickChatMember"
@@ -22,7 +23,7 @@ const unbanChatMemberEndpoint string = "/unbanChatMember"
 var ONCOMMAND = Event{
 	Identifier: "oncommand",
 	Checker: func(toCheck string, filter string) bool {
-		match, _ := regexp.MatchString(toCheck+".*", filter)
+		match, _ := regexp.MatchString("^"+toCheck+".*", filter)
 		return match
 	},
 }
@@ -32,5 +33,22 @@ var ONTEXT = Event{
 	Identifier: "ontext",
 	Checker: func(toCheck string, filter string) bool {
 		return toCheck == filter
+	},
+}
+
+// Match a CallbackQuery with exact data match
+var ONCALLBACK = Event{
+	Identifier: "oncallback",
+	Checker: func(toCheck string, filter string) bool {
+		return toCheck == filter
+	},
+}
+
+// Match a CallbackQuery with data starting with filter
+var ONPAYLOAD = Event{
+	Identifier: "onpayload",
+	Checker: func(toCheck string, filter string) bool {
+		match, _ := regexp.MatchString("^"+toCheck+".*", filter)
+		return match
 	},
 }

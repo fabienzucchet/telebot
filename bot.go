@@ -105,6 +105,9 @@ func (b Bot) dispatchUpdate(u *Update) {
 	case u.Message.Text != "":
 		b.dispatchEvent(ONCOMMAND, u.Message.Text, u)
 		b.dispatchEvent(ONTEXT, u.Message.Text, u)
+	case u.CallbackQuery.Data != "":
+		b.dispatchEvent(ONCALLBACK, u.CallbackQuery.Data, u)
+		b.dispatchEvent(ONPAYLOAD, u.CallbackQuery.Data, u)
 	}
 }
 
@@ -145,4 +148,22 @@ func (b Bot) OnCommand(text string, handler func(u *Update)) {
 
 	// Register handler.
 	b.registerHandler(event, text, handler)
+}
+
+// Match CallbackQuery
+func (b Bot) OnCallback(data string, handler func(u *Update)) {
+
+	event := ONCALLBACK
+
+	// Register handler.
+	b.registerHandler(event, data, handler)
+}
+
+// Match CallbackQuery with payload
+func (b Bot) OnPayload(data string, handler func(u *Update)) {
+
+	event := ONPAYLOAD
+
+	// Register handler.
+	b.registerHandler(event, data, handler)
 }

@@ -2,7 +2,7 @@ package telebot
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/url"
 	"strconv"
 )
@@ -39,10 +39,10 @@ func (b Bot) SendReplyKeyboardMarkupTextMessage(chatId int, text string, keyboar
 	jsonStr, err := json.Marshal(keyboard)
 
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 
-	fmt.Println(string(jsonStr))
+	log.Println(string(jsonStr))
 
 	// Mandatory arguments.
 	val := url.Values{
@@ -76,10 +76,45 @@ func (b Bot) SendReplyKeyboardRemoveTextMessage(chatId int, text string, selecti
 	jsonStr, err := json.Marshal(keyboard)
 
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 
-	fmt.Println(string(jsonStr))
+	log.Println(string(jsonStr))
+
+	// Mandatory arguments.
+	val := url.Values{
+		"chat_id":                     {strconv.Itoa(chatId)},
+		"text":                        {text},
+		"disable_web_page_preview":    {strconv.FormatBool(options.DisableWebPagePreview)},
+		"disable_notification":        {strconv.FormatBool(options.DisableNotification)},
+		"allow_sending_without_reply": {strconv.FormatBool(options.AllowSendingWithoutReply)},
+		"reply_markup":                {string(jsonStr)},
+	}
+
+	// Parse mode
+	if options.ParseMode != "" {
+		val["parse_mode"] = []string{options.ParseMode}
+	}
+
+	// Reply to message
+	if options.ReplyToMessageId != 0 {
+		val["reply_to_message_id"] = []string{strconv.Itoa(options.ReplyToMessageId)}
+	}
+
+	return b.makeAPICall(sendMessageEndpoint, val)
+
+}
+
+// Send a text message with an inline keyboard
+func (b Bot) SendInlineKeyboardMarkupTextMessage(chatId int, text string, keyboard InlineKeyboardMarkup, options SendMessageOptions) (string, error) {
+
+	jsonStr, err := json.Marshal(keyboard)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	log.Println(string(jsonStr))
 
 	// Mandatory arguments.
 	val := url.Values{
