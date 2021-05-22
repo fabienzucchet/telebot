@@ -183,6 +183,26 @@ func (b *Bot) EditInlineKeyboardTextMessage(chatId int, newText string, messageI
 	return b.makeAPICall(editMessageTextEndpoint, val)
 }
 
+// Edit the inline keyboard of a message
+func (b *Bot) EditMessageInlineKeyboardMarkup(chatId int, messageId int, newKeyboard InlineKeyboardMarkup) (string, error) {
+
+	jsonKeyboard, err := json.Marshal(newKeyboard)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	// Mandatory arguments.
+	val := url.Values{
+		"chat_id":      {strconv.Itoa(chatId)},
+		"message_id":   {strconv.Itoa(messageId)},
+		"reply_markup": {string(jsonKeyboard)},
+	}
+
+	return b.makeAPICall(editMessageReplyMarkupEndpoint, val)
+
+}
+
 // Send a dice
 func (b *Bot) SendDice(chatId int, options SendMessageOptions) (string, error) {
 	val := url.Values{

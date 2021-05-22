@@ -14,6 +14,7 @@ const sendDiceEndpoint string = "/sendDice"
 const sendMessageEndpoint string = "/sendMessage"
 const setWebhookEndpoint string = "/setWebhook"
 const unbanChatMemberEndpoint string = "/unbanChatMember"
+const editMessageReplyMarkupEndpoint string = "/editMessageReplyMarkup"
 const editMessageTextEndpoint string = "/editMessageText"
 
 //
