@@ -5,6 +5,7 @@ type Bot struct {
 	apiToken   string
 	config     map[string]string
 	handlerMap map[string]map[string]func(u *Update)
+	commands   []BotCommand
 }
 
 // Paths to SSL certificate .key and .crt file
@@ -94,4 +95,9 @@ type CallbackQuery struct {
 	From    User    `json:"from"`
 	Message Message `json:"message"`
 	Data    string  `json:"data"`
+}
+
+type BotCommand struct {
+	Command     string `json:"command"`
+	Description string `json:"description"`
 }

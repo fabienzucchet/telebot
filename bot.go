@@ -11,6 +11,8 @@
 package telebot
 
 import (
+	"encoding/json"
+	"log"
 	"net/http"
 	"net/url"
 	"time"
@@ -128,6 +130,43 @@ func (b *Bot) registerHandler(event Event, filter string, handler func(u *Update
 	}
 }
 
+// Register a command in the bot commands
+func (b *Bot) registerInCommands(command string, description string) {
+
+	// Only append commands with description >= 3 (otherwise Telegram will ignore it)
+	if len(description) >= 3 {
+		b.commands = append(b.commands, BotCommand{command, description})
+	}
+}
+
+// Set the bot commands with Telegram API
+func (b *Bot) SetCommands() {
+
+	// If no commands are specified, reset bot commands
+	commands := "[]"
+
+	if len(b.commands) > 0 {
+		jsonCommands, err := json.Marshal(b.commands)
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		commands = string(jsonCommands)
+	}
+
+	val := url.Values{
+		"commands": {commands},
+	}
+
+	_, err := b.makeAPICall(setMyCommandsEndpoint, val)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+}
+
 //
 // Below are defined the module API functions used to link handlers to events.
 //
@@ -142,12 +181,16 @@ func (b *Bot) OnText(text string, handler func(u *Update)) {
 }
 
 // Match commands (i.e. when text starts with the filter but can contain more text)
-func (b *Bot) OnCommand(text string, handler func(u *Update)) {
+func (b *Bot) OnCommand(text string, description string, handler func(u *Update)) {
 
 	event := ONCOMMAND
 
 	// Register handler.
 	b.registerHandler(event, text, handler)
+
+	// Register the command in the commandMap
+	b.registerInCommands(text, description)
+
 }
 
 // Match CallbackQuery

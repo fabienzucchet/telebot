@@ -9,14 +9,15 @@ const telegramApiBaseUrl string = "https://api.telegram.org/bot"
 const answerCallbackQueryEndpoint string = "/answerCallbackQuery"
 const deleteMessageEndpoint string = "/deleteMessage"
 const deleteWebhookEndpoint string = "/deleteWebhook"
+const editMessageReplyMarkupEndpoint string = "/editMessageReplyMarkup"
+const editMessageTextEndpoint string = "/editMessageText"
 const getUpdatesEndpoint string = "/getUpdates"
 const kickChatMemberEndpoint string = "/kickChatMember"
+const setMyCommandsEndpoint string = "/setMyCommands"
 const sendDiceEndpoint string = "/sendDice"
 const sendMessageEndpoint string = "/sendMessage"
 const setWebhookEndpoint string = "/setWebhook"
 const unbanChatMemberEndpoint string = "/unbanChatMember"
-const editMessageReplyMarkupEndpoint string = "/editMessageReplyMarkup"
-const editMessageTextEndpoint string = "/editMessageText"
 
 //
 // Events
