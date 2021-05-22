@@ -27,7 +27,14 @@ const unbanChatMemberEndpoint string = "/unbanChatMember"
 var ONCOMMAND = Event{
 	Identifier: "oncommand",
 	Checker: func(toCheck string, filter string) bool {
-		match, _ := regexp.MatchString("^"+toCheck+".*", filter)
+
+		var match bool
+
+		if len(toCheck) > 0 && toCheck[0:1] == "/" {
+			match, _ = regexp.MatchString("^"+toCheck+".*", filter)
+		} else {
+			match, _ = regexp.MatchString("^/"+toCheck+".*", filter)
+		}
 		return match
 	},
 }
