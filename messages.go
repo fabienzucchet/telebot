@@ -108,13 +108,11 @@ func (b *Bot) SendReplyKeyboardRemoveTextMessage(chatId int, text string, select
 // Send a text message with an inline keyboard
 func (b *Bot) SendInlineKeyboardMarkupTextMessage(chatId int, text string, keyboard InlineKeyboardMarkup, options SendMessageOptions) (string, error) {
 
-	jsonStr, err := json.Marshal(keyboard)
+	jsonKeyboard, err := json.Marshal(keyboard)
 
 	if err != nil {
 		log.Println(err)
 	}
-
-	log.Println(string(jsonStr))
 
 	// Mandatory arguments.
 	val := url.Values{
@@ -123,7 +121,7 @@ func (b *Bot) SendInlineKeyboardMarkupTextMessage(chatId int, text string, keybo
 		"disable_web_page_preview":    {strconv.FormatBool(options.DisableWebPagePreview)},
 		"disable_notification":        {strconv.FormatBool(options.DisableNotification)},
 		"allow_sending_without_reply": {strconv.FormatBool(options.AllowSendingWithoutReply)},
-		"reply_markup":                {string(jsonStr)},
+		"reply_markup":                {string(jsonKeyboard)},
 	}
 
 	// Parse mode
@@ -138,6 +136,51 @@ func (b *Bot) SendInlineKeyboardMarkupTextMessage(chatId int, text string, keybo
 
 	return b.makeAPICall(sendMessageEndpoint, val)
 
+}
+
+// Edit a text message.
+func (b *Bot) EditTextMessage(chatId int, newText string, messageId int, options SendMessageOptions) (string, error) {
+
+	// Mandatory arguments.
+	val := url.Values{
+		"chat_id":                  {strconv.Itoa(chatId)},
+		"message_id":               {strconv.Itoa(messageId)},
+		"text":                     {newText},
+		"disable_web_page_preview": {strconv.FormatBool(options.DisableWebPagePreview)},
+	}
+
+	// Parse mode
+	if options.ParseMode != "" {
+		val["parse_mode"] = []string{options.ParseMode}
+	}
+
+	return b.makeAPICall(editMessageTextEndpoint, val)
+}
+
+// Edit a text message with InlineKeyboardMarkup
+func (b *Bot) EditInlineKeyboardTextMessage(chatId int, newText string, messageId int, newKeyboard InlineKeyboardMarkup, options SendMessageOptions) (string, error) {
+
+	jsonKeyboard, err := json.Marshal(newKeyboard)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	// Mandatory arguments.
+	val := url.Values{
+		"chat_id":                  {strconv.Itoa(chatId)},
+		"message_id":               {strconv.Itoa(messageId)},
+		"text":                     {newText},
+		"disable_web_page_preview": {strconv.FormatBool(options.DisableWebPagePreview)},
+		"reply_markup":             {string(jsonKeyboard)},
+	}
+
+	// Parse mode
+	if options.ParseMode != "" {
+		val["parse_mode"] = []string{options.ParseMode}
+	}
+
+	return b.makeAPICall(editMessageTextEndpoint, val)
 }
 
 // Send a dice
