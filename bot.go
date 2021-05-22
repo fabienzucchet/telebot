@@ -31,6 +31,9 @@ func CreateBot(apiToken string, config map[string]string) Bot {
 // Start the bot.
 func (b *Bot) Start() {
 
+	// Set the commands of the bot
+	b.setBotCommands()
+
 	// Determine the type of the bot.
 	isWebook := b.config != nil
 
@@ -140,7 +143,7 @@ func (b *Bot) registerInCommands(command string, description string) {
 }
 
 // Set the bot commands with Telegram API
-func (b *Bot) SetCommands() {
+func (b *Bot) setBotCommands() {
 
 	// If no commands are specified, reset bot commands
 	commands := "[]"
