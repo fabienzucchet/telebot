@@ -203,6 +203,19 @@ func (b *Bot) EditMessageInlineKeyboardMarkup(chatId int, messageId int, newKeyb
 
 }
 
+// Delete a message
+func (b *Bot) DeleteMessage(chatId int, messageId int) (string, error) {
+
+	// Mandatory arguments.
+	val := url.Values{
+		"chat_id":    {strconv.Itoa(chatId)},
+		"message_id": {strconv.Itoa(messageId)},
+	}
+
+	return b.makeAPICall(deleteMessageEndpoint, val)
+
+}
+
 // Send a dice
 func (b *Bot) SendDice(chatId int, options SendMessageOptions) (string, error) {
 	val := url.Values{

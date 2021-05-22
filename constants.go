@@ -7,6 +7,7 @@ const telegramApiBaseUrl string = "https://api.telegram.org/bot"
 
 // API endpoints
 const answerCallbackQueryEndpoint string = "/answerCallbackQuery"
+const deleteMessageEndpoint string = "/deleteMessage"
 const deleteWebhookEndpoint string = "/deleteWebhook"
 const getUpdatesEndpoint string = "/getUpdates"
 const kickChatMemberEndpoint string = "/kickChatMember"
