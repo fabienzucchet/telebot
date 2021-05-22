@@ -21,3 +21,6 @@
 *.pem
 *.key
 *.crt
+
+# GitGuardian stuff
+.cache_ggshield
