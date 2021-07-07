@@ -93,11 +93,47 @@ bot.OnText("/hello", func(u *telebot.Update) {
 })
 ```
 
+* **ONCALLBACK**: Match a CallbackQuery with exact data match
+
+Below is an example matching a callback with `Yes` as data and deleting the message linked to the callback.
+
+```Go
+bot.OnCallback("Yes", func(u *telebot.Update) {
+    chatId := u.CallbackQuery.Message.Chat.Id
+    messageId := u.CallbackQuery.Message.Id
+
+    res, err := bot.DeleteMessage(chatId, messageId)
+
+    if err != nil {
+        log.Printf("Error deleting message: %s", err.Error())
+    }
+})
+```
+
+* **ONPAYLOAD**: Match a CallbackQuery with data starting with the filter
+
+Below is an example matching a callback event with a payload starting with `Yes` and delete the source message.
+
+```Go
+bot.OnPayload("Yes", func(u *telebot.Update) {
+    chatId := u.CallbackQuery.Message.Chat.Id
+    messageId := u.CallbackQuery.Message.Id
+
+    res, err := bot.DeleteMessage(chatId, messageId)
+
+    if err != nil {
+        log.Printf("Error deleting message: %s", err.Error())
+    }
+})
+```
+
 ## How to make the bot send content to Telegram chat with telebot ?
 
-In addition to update reception, telebot has some functions designed to make your bot send content. You can use it in your handlers. Such methods are defined in [messages.go](messages.go).
+In addition to update reception, telebot has some functions designed to make your bot send content. You can use it in your handlers.
 
-### List of reply methods available
+### List of message methods available
+
+Methods aiming at sending messages are defined in [messages.go](messages.go).
 
 * **SendTextMessage**: Sends a text message.
 
@@ -130,6 +166,120 @@ type SendMessageOptions struct {
 }
 ```
 
+* **SendReplyKeyboardMarkupTextMessage**: Send a text message with a ReplyKeyboardMarkup keyboard.
+
+```Go
+bot.SendReplyKeyboardMarkupTextMessage(chatId int, text string, keyboard ReplyKeyboardMarkup, options SendMessageOptions)
+```
+
+You can create a custom reply keyboard and send the message with the following code snippet.
+
+```Go
+text := "Your text here"
+yesButton := telebot.KeyboardButton{"Yes"}
+noButton := telebot.KeyboardButton{"No"}
+firstRow := []telebot.KeyboardButton{yesButton, noButton}
+keyboard := telebot.ReplyKeyboardMarkup{Keyboard: [][]telebot.KeyboardButton{firstRow}}
+
+res, err := bot.SendReplyKeyboardMarkupTextMessage(chatId, text, keyboard, telebot.SendMessageOptions{})
+```
+
+* **SendReplyKeyboardRemoveTextMessage**: Send a text message with a ReplyKeyboardRemove keyboard
+
+```Go
+bot.SendReplyKeyboardRemoveTextMessage(chatId int, text string, selective bool, options SendMessageOptions)
+```
+
+* **SendInlineKeyboardMarkupTextMessage**: Send a text message with an inline keyboard
+
+```Go
+bot.SendInlineKeyboardMarkupTextMessage(chatId int, text string, keyboard InlineKeyboardMarkup, options SendMessageOptions)
+```
+
+You can define a custom inline keyboard the same way as below.
+
+```Go
+bot.OnText("/hello", func(u *telebot.Update) {
+    chatId := u.Message.Chat.Id
+    text := "Hello ?"
+
+    yesButton := telebot.InlineKeyboardButton{"Hello !", "Hello"}
+    noButton := telebot.InlineKeyboardButton{"WHo are you", "WhoAreYou"}
+
+    firstRow := []telebot.InlineKeyboardButton{yesButton, noButton}
+    keyboard := telebot.InlineKeyboardMarkup{[][]telebot.InlineKeyboardButton{firstRow}}
+
+    res, err := bot.SendInlineKeyboardMarkupTextMessage(chatId, text, keyboard, telebot.SendMessageOptions{})
+
+    if err != nil {
+            log.Printf("Error sending message: %s", err.Error())
+        }
+
+})
+```
+
+* **EditTextMessage**: Edit a text message
+
+```Go
+bot.EditTextMessage(chatId int, newText string, messageId int, options SendMessageOptions)
+```
+
+Some message options are available. Specify the options using `SendMessageOptions` like if you were using `SendTextMessage` to send a message.
+
+* **EditInlineKeyboardTextMessage**: Edit a text message with InlineKeyboardMarkup
+
+```Go
+bot.EditInlineKeyboardTextMessage(chatId int, newText string, messageId int, newKeyboard InlineKeyboardMarkup, options SendMessageOptions)
+```
+
+* **EditMessageInlineKeyboardMarkup**: Edit the inline keyboard of a message
+
+```Go
+bot.EditMessageInlineKeyboardMarkup(chatId int, messageId int, newKeyboard InlineKeyboardMarkup)
+```
+
+* **DeleteMessage**: Delete a message
+
+```Go
+bot.DeleteMessage(chatId int, messageId int)
+```
+
+### List of callback methods available
+
+Some methods defined in `callback.go` can be used to answer CallbackQueries.
+
+* **AnswerCallbackQuery**: Answer a callback query without notification
+
+```Go
+bot.AnswerCallbackQuery(callbackQueryId string)
+```
+
+* **AnswerCallbackQueryNotification**: Answer a callback query with notification
+
+```Go
+bot.AnswerCallbackQueryNotification(callbackQueryId string, text string, showAlert bool)
+```
+
+### List of chat methods available
+
+You can use the methods defined in `chat.go` to manage a channel (kick, unban users)
+
+* **KickChatMember**: Kick an user from a group
+
+```Go
+bot.KickChatMember(chatId int, userId int)
+```
+
+* **UnbanChatMember**: Unban an user from a group
+
+```Go
+bot.UnbanChatMember(chatId int, userId int)
+```
+
+### List of dice methods
+
+The methods defined in `dice.go` allow your bot to send random animated emoji such as a dice toss
+
 * **SendDice**: Sends a dice.
 
 ```Go
@@ -148,19 +298,19 @@ bot.SendDice(chatId int, options telebot.SendMessageOptions)
     })
 ```
 
+* **SendRandomDice**: send a random dice
+
+```Go
+bot.SendRandomDice(chatId int, options SendMessageOptions)
+```
+
+* **SendDiceEmoji**: Send a dice Emoji (Supported emojis : “🎲”, “🎯”, “🏀”, “⚽”, “🎳”, or “🎰”. Default is “🎲”. )
+
+```Go
+bot.SendDiceEmoji(chatId int, emoji string, options SendMessageOptions)
+```
+
 Check the [Telegram API documentation](https://core.telegram.org/bots/api#senddice) to see the options of Telegram sendDice API function supported (defined in telebot.SendMessageOptions).
-
-* **KickChatMember**: Kick a chat member.
-
-```Go
-bot.KickChatMember(chatId int, userId int)
-```
-
-* **UnbanChatMember**: Unban a chat member.
-
-```Go
-bot.UnbanChatMember(chatId int, userId int)
-```
 
 ## Example bot
 
